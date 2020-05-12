@@ -1,3 +1,5 @@
+(in-package #:sdl-gui-utils)
+
 (defclass dragndropnscale ()
   ((callback :initform nil :initarg :callback
  		   :documentation "A function f(coord, scale) that wil be called on position and scale updates")
