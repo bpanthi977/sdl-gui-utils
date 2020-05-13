@@ -11,4 +11,6 @@
                (:file "sdl-gui-utils")
 			   (:file "dragndropnscale")
 			   (:file "text-entry")
-			   (:file "number-entry")))
+			   (:file "number-entry")
+			   (:file "list-box")
+			   (:file "command-box")))

@@ -6,7 +6,8 @@
 
 (defmethod initialize-instance :after ((w number-entry) &key)
   (setf (slot-value w 'text)
-		(format nil "~a" (or (slot-value w 'value) ""))))
+		(format nil "~a" (or (slot-value w 'value) ""))
+		(slot-value w 'clipped-text) (calculate-clipped-text w)))
 
 
 ;; Exteranl Commands

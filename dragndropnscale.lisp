@@ -4,23 +4,23 @@
   ((callback :initform nil :initarg :callback
  		   :documentation "A function f(coord, scale) that wil be called on position and scale updates")
    (drag-state :type boolean :initform nil)
-   (origin :type complex :initform #C(0 0) :initarg :origin)
+   (origin :type sdl:point :initform (sdl:point :x 0 :y 0) :initarg :origin)
    (scale :type float :initform 1 :initarg :scale)
    (scale-factor :type float :initform 1.2 :initarg scale-factor)
    (scale-at-point :type boolean :initform t :initarg :scale-at-point?)
-   (hold-position :type complex :initform nil)
-   (translation :type complex :initform #C(0 0) :initarg :translation)
+   (hold-position :type sdl:point :initform nil)
+   (translation :type sdl:point :initform (sdl:point :x 0 :y 0) :initarg :translation)
    (continuous-update :type boolean :initform t :initarg :continuous-update?)))
 
 (defmethod click ((w dragndropnscale) x y)
   (with-slots (drag-state hold-position) w
 	(setf drag-state t)
-	(setf hold-position (complex x y))))
+	(setf hold-position (sdl:point :x x :y y))))
 
 (defmethod unclick ((w dragndropnscale) mouse-x mouse-y)
   (with-slots (drag-state hold-position scale callback translation) w
 	(setf drag-state nil)
-	(incf translation (- (complex mouse-x mouse-y) hold-position))
+	(pincf translation (p- (sdl:point :x mouse-x :y mouse-y) hold-position))
 	(when callback
 	  (funcall callback translation scale))))
 
@@ -28,7 +28,7 @@
   (with-slots (translation scale callback scale-at-point origin) w
 	(setf scale (* scale sf))
 	(when scale-at-point
-	  (setf translation (- (* sf translation) (* (1- sf) (complex x y)))))
+	  (setf translation (p- (p* sf translation) (p* (1- sf) (sdl:point :x x :y y)))))
 	(funcall callback translation scale)))
 
 ;; External Inputs
@@ -38,7 +38,7 @@
 	(with-slots (continuous-update hold-position scale callback translation) w
 	  (when (and callback continuous-update)
 		(funcall callback
-				 (+ translation (- (complex mouse-x mouse-y) hold-position))
+				 (p+ translation (p- (sdl:point :x mouse-x :y mouse-y) hold-position))
 				 scale)))))
 
 (defmethod mouse-button-down ((w dragndropnscale) button x y)
